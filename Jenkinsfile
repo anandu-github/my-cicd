@@ -3,18 +3,15 @@ pipeline {
 
     environment {
         APP_NAME = "my-app"
-        CONTAINER_PORT = "3000"
-        HOST_PORT = "80"
+    }
+
+    tools {
+        nodejs 'node-18'
     }
 
     stages {
 
         stage('Install Dependencies') {
-            agent {
-                docker {
-                    image 'node:18'
-                }
-            }
             steps {
                 sh 'npm install'
             }
@@ -31,18 +28,9 @@ pipeline {
                 sh '''
                 docker stop $APP_NAME || true
                 docker rm $APP_NAME || true
-                docker run -d -p $HOST_PORT:$CONTAINER_PORT --name $APP_NAME $APP_NAME
+                docker run -d -p 80:3000 --name $APP_NAME $APP_NAME
                 '''
             }
-        }
-    }
-
-    post {
-        success {
-            echo '✅ Deployment successful!'
-        }
-        failure {
-            echo '❌ Deployment failed!'
         }
     }
 }
