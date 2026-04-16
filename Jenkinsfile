@@ -3,17 +3,18 @@ pipeline {
 
     environment {
         APP_NAME = "my-app"
+        CONTAINER_PORT = "3000"
+        HOST_PORT = "80"
     }
 
     stages {
 
-        stage('Clone Code') {
-            steps {
-                git branch: 'main', url: 'https://github.com/anandu-github/my-cicd.git'
-            }
-        }
-
         stage('Install Dependencies') {
+            agent {
+                docker {
+                    image 'node:18'
+                }
+            }
             steps {
                 sh 'npm install'
             }
@@ -28,11 +29,20 @@ pipeline {
         stage('Run Container') {
             steps {
                 sh '''
-                docker stop my-app || true
-                docker rm my-app || true
-                docker run -d -p 80:3000 --name my-app my-app
+                docker stop $APP_NAME || true
+                docker rm $APP_NAME || true
+                docker run -d -p $HOST_PORT:$CONTAINER_PORT --name $APP_NAME $APP_NAME
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Deployment successful!'
+        }
+        failure {
+            echo '❌ Deployment failed!'
         }
     }
 }
