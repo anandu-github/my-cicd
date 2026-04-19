@@ -17,11 +17,11 @@ pipeline {
             }
         }
 
-        stage('Remove Old Docker Image') {
-            steps {
-                sh 'docker rmi $APP_NAME .'
-            }
-        }
+ #       stage('Remove Old Docker Image') {
+  #          steps {
+  #              sh 'docker rmi $APP_NAME .'
+  #          }
+  $      }
 
         stage('Build Docker Image') {
             steps {
