@@ -17,7 +17,7 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Remove Old Docker Image') {
             steps {
                 sh 'docker rmi $APP_NAME .'
             }
