@@ -19,6 +19,12 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
+                sh 'docker rmi $APP_NAME .'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
                 sh 'docker build -t $APP_NAME .'
             }
         }
